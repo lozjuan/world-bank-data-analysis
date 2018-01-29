@@ -7,6 +7,7 @@ import random
 file = 'hnp_stats_csv/HNP_StatsData.csv'
 hn_reader = pd.read_csv(file)
 colors = list(mcolors.CSS4_COLORS.keys())
+tick = [1960, 1970, 1980, 1990, 2000, 2010, 2017]
 
 
 def create_single_country_indicator_plot(indicator_name, *args):
@@ -23,7 +24,6 @@ def create_single_country_indicator_plot(indicator_name, *args):
         plt.legend(handler_map={arg: HandlerLine2D(numpoints=1)})
         plt.xlabel('Year')
         plt.ylabel(indicator_name)
-        tick = [1960, 1970, 1980, 1990, 2000, 2010, 2017]
         plt.xticks(tick, tick)
         plt.show()
 
@@ -41,9 +41,5 @@ def create_multiple_country_indicator_plot(indicator_name, *args):
         plt.legend(handler_map={arg: HandlerLine2D(numpoints=1)})
         plt.xlabel('Year')
         plt.ylabel(indicator_name)
-        tick = [1960, 1970, 1980, 1990, 2000, 2010, 2017]
         plt.xticks(tick, tick)
     plt.show()
-
-create_multiple_country_indicator_plot('Adolescent fertility rate (births per 1,000 women ages 15-19)', 'FRA', 'PER',
-                                       'COL')
