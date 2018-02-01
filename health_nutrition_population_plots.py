@@ -61,3 +61,32 @@ def create_3D_indicator_scatter(x_axis, y_axis, z_axis, year, size_prime_factor)
     plt.ylabel(y_axis)
     plt.title('Data extracted from WB ' + year)
     plt.show()
+
+
+def create_population_pyramid(country, year):
+    """Generates population pyramid by country and year using world bank's data health and
+    nutrition indicators (csv file) """
+    # TODO: put *args instead of country into function arguments
+    all_data = pd.DataFrame(hn_reader)
+    required_rows = all_data.filter(items=['Country Name', 'Indicator Name', year])
+    required_rows.set_index('Indicator Name', inplace=True)
+    female_data, male_data = required_rows.filter(like="Female population"
+                                                       "", axis=0), required_rows.filter(like='Male population', axis=0)
+    female_data['indicator'] = female_data.index
+    female_data.index, male_data.index = pd.RangeIndex(start=0, stop=4403, step=1), \
+                                         pd.RangeIndex(start=0, stop=4403, step=1)
+    female_data.rename(columns={year: 'female'}, inplace=True)
+    male_data.rename(columns={year: 'male'}, inplace=True)
+    del male_data['Country Name']
+    pyramid_data = pd.concat([female_data, male_data], axis=1, join_axes=[female_data.index])
+    pyramid_data = pyramid_data[['indicator', 'Country Name', 'female', 'male']]
+    pyramid_data['indicator'] = pyramid_data['indicator'].apply(lambda x: x[17:])
+    pyramid_data_by_country = pyramid_data[pyramid_data['Country Name'] == country]
+    p1 = plt.barh(pyramid_data_by_country['indicator'], pyramid_data_by_country['female']*(-1), color="red")
+    p2 = plt.barh(pyramid_data_by_country['indicator'], pyramid_data_by_country['male'], color="blue")
+    plt.legend((p1[0], p2[0]), ('Female', 'Male'))
+    plt.xticks([-2000000, -1000000, 0, 1000000, 2000000], [2, 1, 0, 1, 2])
+    plt.xlabel('Population (in millions)')
+    plt.ylabel('Age ranges')
+    plt.title("Population pyramid " + country + " " + year)
+    plt.show()
