@@ -41,7 +41,7 @@ def create_multiple_country_indicator_plot(indicator_name, *args):
         plt.legend(handler_map={arg: HandlerLine2D(numpoints=1)})
         plt.xlabel('Year')
         plt.ylabel(indicator_name)
-        plt.xticks(tick)
+        plt.xticks([1960, 1970, 1980, 1990, 2000, 2010, 2017])
     plt.show()
 
 
