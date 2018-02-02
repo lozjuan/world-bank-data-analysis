@@ -8,7 +8,6 @@ file = 'hnp_stats_csv/HNP_StatsData.csv'
 hn_reader = pd.read_csv(file)
 hn_reader_countries = pd.read_csv(file, skiprows=range(1, 15710), na_values=0)
 colors = list(mcolors.CSS4_COLORS.keys())
-tick = [1960, 1970, 1980, 1990, 2000, 2010, 2017]
 
 
 def create_single_country_indicator_plot(indicator_name, *args):
@@ -25,7 +24,7 @@ def create_single_country_indicator_plot(indicator_name, *args):
         plt.legend(handler_map={arg: HandlerLine2D(numpoints=1)})
         plt.xlabel('Year')
         plt.ylabel(indicator_name)
-        plt.xticks(tick)
+        plt.xticks([1960, 1970, 1980, 1990, 2000, 2010, 2017])
         plt.show()
 
 
@@ -89,4 +88,17 @@ def create_population_pyramid(country, year):
     plt.xlabel('Population (in millions)')
     plt.ylabel('Age ranges')
     plt.title("Population pyramid " + country + " " + year)
+    plt.show()
+
+def create_indicator_histogram(indicator, year, *args, bins=None, row_width=0.8, sample=None):
+    all_data = pd.DataFrame(hn_reader)
+    result = pd.DataFrame()
+    for arg in args:
+        country = all_data[all_data['Country Code'] == arg]
+        ind = country[country['Indicator Name'] == indicator]
+        ind_df = ind[year].to_frame()
+        result = result.append(ind_df)
+    plt.hist(result.round(decimals=2), bins=bins, range=(result.min(), result.max()), rwidth=row_width)
+    plt.title(sample + ' ' + indicator + ' ' + year)
+    plt.xlabel('World Bank indicators database')
     plt.show()
